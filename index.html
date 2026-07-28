@@ -1300,7 +1300,7 @@ function openDetail(id){
   const isInProgress=d.status==='In Progress';
   const isSaved=d.status==='Saved';
   const isFinalized=isConfirmed||isRejected||isCanceled;
-  const editable=isInProgress; // In Progress → inline editable
+  const editable=isInProgress||(isSaved&&!isFinalized); // In Progress or Saved (not finalized) → inline editable
 
   // Always show data state (no more empty state for "not uploaded")
   document.getElementById('detail-empty-state').style.display='none';
@@ -1376,11 +1376,14 @@ function openDetail(id){
     // Saved, waiting for confirm
     btnArea.innerHTML=`
       <button class="btn-action" onclick="rejectStocktaking()" style="min-width:120px;background:#ccc;color:#555;border:none;">Reject</button>
-      <button class="btn-action" onclick="confirmStocktaking()" style="min-width:120px;background:#2E7D32;color:#fff;border:none;">Confirm</button>
+      <button class="btn-action" onclick="confirmStocktaking()" style="min-width:120px;background:#4CAF50;color:#fff;border:none;">Confirm</button>
+      <span style="display:inline-block;width:1px;height:28px;background:#ddd;margin:0 8px;vertical-align:middle;"></span>
       <button class="btn-action btn-outline" onclick="exportDetailExcel()" style="min-width:120px;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="#555"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
         Excel Export
-      </button>`;
+      </button>
+      <button class="btn-action btn-primary" id="btn-save" onclick="saveStocktaking()" style="min-width:120px;">Save</button>`;
+    checkSaveEnabled();
   } else {
     // Finalized → Export only
     btnArea.innerHTML=`
