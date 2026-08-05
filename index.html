@@ -1395,9 +1395,10 @@ function openDetail(id){
 
   // Header action buttons — removed (Confirm/Reject moved to toolbar)
 
-  // Cancel button (bottom-right): visible when In Progress or Saved + READY
+  // Cancel button (bottom-right): visible when In Progress + READY only (not Saved + READY)
   const cancelArea=document.getElementById('detail-cancel-area');
-  cancelArea.style.display=(!isFinalized && d.procResult==='READY')?'flex':'none';
+  const showCancel=!isFinalized && !isSaved && d.procResult==='READY';
+  cancelArea.style.display=showCancel?'flex':'none';
 
   window.scrollTo(0,0);
 }
